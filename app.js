@@ -1,6 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+import fragment from "./shaders/fragment.glsl";
+import vertex from "./shaders/vertex.glsl";
+
 export default class Sketch {
   constructor(options) {
     this.container = options.domElement;
@@ -12,7 +15,7 @@ export default class Sketch {
 
     this.scene = new THREE.Scene();
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.container.appendChild(this.renderer.domElement);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -38,15 +41,26 @@ export default class Sketch {
   }
 
   addObject() {
-    this.geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-    this.material = new THREE.MeshNormalMaterial();
+    // this.geometry = new THREE.SphereGeometry(0.2, 32, 32);
+    this.geometry = new THREE.PlaneGeometry(0.5, 0.5, 100, 100);
+    // this.material = new THREE.MeshNormalMaterial();
+    this.material = new THREE.ShaderMaterial({
+      wireframe: true,
+      uniforms: {
+        time: { value: 1.0 },
+        resolution: { value: new THREE.Vector2() }
+      },
+      vertexShader: vertex,
+      fragmentShader: fragment
+    });
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.scene.add(this.mesh);
   }
 
   render() {
-    this.time += 0.05;
+    this.time += 0.03;
+    this.material.uniforms.time.value = this.time;
     this.mesh.rotation.x = this.time / 2000;
     this.mesh.rotation.y = this.time / 1000;
 
