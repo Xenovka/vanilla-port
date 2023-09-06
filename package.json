@@ -3,6 +3,6 @@
     "three": "^0.156.1"
   },
   "devDependencies": {
-    "vite": "^4.4.9"
+    "@parcel/transformer-glsl": "^2.9.3"
   }
 }
