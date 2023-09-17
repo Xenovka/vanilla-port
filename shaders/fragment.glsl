@@ -1,12 +1,10 @@
 uniform float time;
+uniform float uProgress;
 uniform sampler2D uTexture;
 
-varying float pulse;
 varying vec2 vUv;
 
 void main() {
-  vec4 myImage = texture(uTexture, vUv + .01 * sin(vUv * 15. + time));
-  float sinePulse = (1. + sin(vUv.x*50. + time)) * .5;
-  // gl_FragColor = vec4(sinePulse, 0., 0., 1.);
-  gl_FragColor = myImage;
+  vec4 image = texture(uTexture, vUv);
+  gl_FragColor = vec4(image);
 }
